@@ -7,21 +7,23 @@ use IEEE.STD_LOGIC_1164.ALL;
 use work.defs.all;
 
 entity merge is
-  generic(PHASE_INIT_C  : std_logic := '0';
+  generic(
+    MERGE_DATA_WIDTH : natural := DATA_WIDTH;
+    PHASE_INIT_C  : std_logic := '0';
     PHASE_INIT_A        : std_logic := '0';
     PHASE_INIT_B        : std_logic := '0');
   port (rst   : in std_logic;
     --Input channel 1
     inA_req   : in std_logic;
     inA_ack   : out std_logic;
-    inA_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
+    inA_data  : in std_logic_vector(MERGE_DATA_WIDTH-1 downto 0);
     -- Input channel 2
     inB_req   : in std_logic;
     inB_ack   : out std_logic;
-    inB_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
+    inB_data  : in std_logic_vector(MERGE_DATA_WIDTH-1 downto 0);
     -- Output channel
     outC_req  : out std_logic;
-    outC_data : out std_logic_vector(DATA_WIDTH-1 downto 0);
+    outC_data : out std_logic_vector(MERGE_DATA_WIDTH-1 downto 0);
     outC_ack  : in std_logic
     );
 end merge;
@@ -31,7 +33,7 @@ architecture Behavioral of merge is
   signal inA_token, inB_token, outC_bubble : std_logic;
   signal phase_a, phase_b, phase_c: std_logic;
   signal click : std_logic;
-  signal data_reg, data_sig: std_logic_vector(DATA_WIDTH-1 downto 0);
+  signal data_reg, data_sig: std_logic_vector(MERGE_DATA_WIDTH-1 downto 0);
   
   attribute dont_touch : string;
   attribute dont_touch of  phase_c, phase_a, phase_b, inA_token, inB_token : signal is "true";   

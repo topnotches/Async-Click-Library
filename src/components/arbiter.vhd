@@ -5,19 +5,22 @@ USE work.rgd_mutex;
 USE work.merge;
 
 ENTITY arbiter IS
+    GENERIC (
+        ARBITER_DATA_WIDTH : natural := DATA_WIDTH
+    );
     PORT (
         rst : IN STD_LOGIC;
         -- Channel A
         inA_req   : in  std_logic;
-        inA_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
+        inA_data  : in std_logic_vector(ARBITER_DATA_WIDTH-1 downto 0);
         inA_ack   : out std_logic;
         -- Channel B
         inB_req   : in std_logic;
-        inB_data  : in std_logic_vector(DATA_WIDTH-1 downto 0);
+        inB_data  : in std_logic_vector(ARBITER_DATA_WIDTH-1 downto 0);
         inB_ack   : out std_logic;
         -- Output channel
         outC_req  : out std_logic;
-        outC_data : out std_logic_vector(DATA_WIDTH-1 downto 0);
+        outC_data : out std_logic_vector(ARBITER_DATA_WIDTH-1 downto 0);
         outC_ack  : in  std_logic
     );
 END ENTITY;
@@ -30,12 +33,16 @@ ARCHITECTURE impl OF arbiter IS
 BEGIN
     inA_ack <= inA_done;
     inB_ack <= inB_done;
-    rgdmx : ENTITY rgd_mutex PORT MAP (
+    rgdmx : ENTITY rgd_mutex 
+    PORT MAP (
         rst,
         inA_req, inA_req_mux, inA_done,
         inB_req, inB_req_mux, inB_done
         );
-    mrg : ENTITY merge PORT MAP (
+    mrg : ENTITY merge generic (
+        MERGE_DATA_WIDTH => ARBITER_DATA_WIDTH;
+    );
+        PORT MAP (
         rst, 
         inA_req_mux, inA_done, inA_data,
         inB_req_mux, inB_done, inB_data, 
@@ -57,18 +64,20 @@ end entity;
 architecture tb of arbiter_tb is
     signal rst : std_logic;
     signal inA_req   :  std_logic;
-    signal inA_data  :  std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal inA_data  :  std_logic_vector(ARBITER_DATA_WIDTH-1 downto 0);
     signal inA_ack   :  std_logic;
     signal inB_req   :  std_logic;
-    signal inB_data  :  std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal inB_data  :  std_logic_vector(ARBITER_DATA_WIDTH-1 downto 0);
     signal inB_ack   :  std_logic;
     signal outC_req  :  std_logic;
-    signal outC_data :  std_logic_vector(DATA_WIDTH-1 downto 0);
+    signal outC_data :  std_logic_vector(ARBITER_DATA_WIDTH-1 downto 0);
     signal outC_ack  :  std_logic;
 
 begin
 
-    DUT : entity arbiter
+    DUT : entity arbiter generic (
+        ARBITER_DATA_WIDTH => 16
+    );
         port map (
             rst,
             inA_req,
