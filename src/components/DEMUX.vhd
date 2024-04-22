@@ -8,6 +8,7 @@ use work.defs.all;
 
 entity demux is
   generic(
+    DEMUX_DATA_WIDTH : natural := DATA_WIDTH;
     PHASE_INIT_A  : std_logic := '0';
     PHASE_INIT_B  : std_logic := '0';
     PHASE_INIT_C  : std_logic := '0'
@@ -16,7 +17,7 @@ entity demux is
     rst           : in  std_logic;
     -- Input port
     inA_req       : in  std_logic;
-    inA_data      : in std_logic_vector(DATA_WIDTH-1 downto 0);
+    inA_data      : in std_logic_vector(DEMUX_DATA_WIDTH-1 downto 0);
     inA_ack       : out std_logic;
     -- Select port 
     inSel_req     : in  std_logic;
@@ -24,11 +25,11 @@ entity demux is
     selector      : in std_logic;
     -- Output channel 1
     outB_req      : out std_logic;
-    outB_data     : out std_logic_vector(DATA_WIDTH-1 downto 0);
+    outB_data     : out std_logic_vector(DEMUX_DATA_WIDTH-1 downto 0);
     outB_ack      : in  std_logic;
     -- Output channel 2
     outC_req      : out std_logic;
-    outC_data     : out std_logic_vector(DATA_WIDTH-1 downto 0);
+    outC_data     : out std_logic_vector(DEMUX_DATA_WIDTH-1 downto 0);
     outC_ack      : in  std_logic
     );
 end demux;

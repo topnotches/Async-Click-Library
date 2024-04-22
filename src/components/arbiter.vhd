@@ -39,9 +39,10 @@ BEGIN
         inA_req, inA_req_mux, inA_done,
         inB_req, inB_req_mux, inB_done
         );
-    mrg : ENTITY merge generic (
-        MERGE_DATA_WIDTH => ARBITER_DATA_WIDTH;
-    );
+    mrg : ENTITY merge
+        generic map(
+        MERGE_DATA_WIDTH => ARBITER_DATA_WIDTH
+        )
         PORT MAP (
         rst, 
         inA_req_mux, inA_done, inA_data,
@@ -64,20 +65,20 @@ end entity;
 architecture tb of arbiter_tb is
     signal rst : std_logic;
     signal inA_req   :  std_logic;
-    signal inA_data  :  std_logic_vector(ARBITER_DATA_WIDTH-1 downto 0);
+    signal inA_data  :  std_logic_vector(16-1 downto 0);
     signal inA_ack   :  std_logic;
     signal inB_req   :  std_logic;
-    signal inB_data  :  std_logic_vector(ARBITER_DATA_WIDTH-1 downto 0);
+    signal inB_data  :  std_logic_vector(16-1 downto 0);
     signal inB_ack   :  std_logic;
     signal outC_req  :  std_logic;
-    signal outC_data :  std_logic_vector(ARBITER_DATA_WIDTH-1 downto 0);
+    signal outC_data :  std_logic_vector(16-1 downto 0);
     signal outC_ack  :  std_logic;
 
 begin
 
-    DUT : entity arbiter generic (
+    DUT : entity arbiter generic map(
         ARBITER_DATA_WIDTH => 16
-    );
+    )
         port map (
             rst,
             inA_req,
