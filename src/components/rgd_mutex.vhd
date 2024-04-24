@@ -103,46 +103,56 @@ BEGIN
 
     t_0 : PROCESS (pulse_a, rst)
     BEGIN
+        
+        IF rising_edge(pulse_a) THEN
+            phase_in_a <= NOT phase_in_a AFTER REG_CQ_DELAY;
+        END IF;
         IF rst = '1' THEN
             phase_in_a <= PHASE_INIT_IN_A;
-        ELSIF rising_edge(pulse_a) THEN
-            phase_in_a <= NOT phase_in_a AFTER REG_CQ_DELAY;
         END IF;
     END PROCESS;
 
     t_1 : PROCESS (pulse_b, rst)
     BEGIN
+        
+        IF rising_edge(pulse_b) THEN
+            phase_in_b <= NOT phase_in_b AFTER REG_CQ_DELAY;
+        END IF;
         IF rst = '1' THEN
             phase_in_b <= PHASE_INIT_IN_B;
-        ELSIF rising_edge(pulse_b) THEN
-            phase_in_b <= NOT phase_in_b AFTER REG_CQ_DELAY;
         END IF;
     END PROCESS;
 
     t_2 : PROCESS (click_a, rst)
     BEGIN
+        
+        -- Loopback reacting to rising edge control
+        IF rising_edge(click_a) THEN
+            phase_out_a <= NOT phase_out_a AFTER REG_CQ_DELAY;
+        -- Output reacting to falling edge 
+        END IF;
+        IF falling_edge(click_a) THEN
+            phase_out_b <= NOT phase_out_b AFTER REG_CQ_DELAY;
+
+        END IF;
         IF rst = '1' THEN
             phase_out_a <= PHASE_INIT_OUT_A;
             phase_out_b <= PHASE_INIT_OUT_B;
-        -- Loopback reacting to rising edge control
-        ELSIF rising_edge(click_a) THEN
-            phase_out_a <= NOT phase_out_a AFTER REG_CQ_DELAY;
-        -- Output reacting to falling edge 
-        ELSIF falling_edge(click_a) THEN
-            phase_out_b <= NOT phase_out_b AFTER REG_CQ_DELAY;
-
         END IF;
     END PROCESS;
 
     t_3 : PROCESS (click_b, rst)
     BEGIN
+        
+        IF rising_edge(click_b) THEN
+            phase_out_c <= NOT phase_out_c AFTER REG_CQ_DELAY;
+        END IF;
+        IF falling_edge(click_b) THEN
+            phase_out_d <= NOT phase_out_d AFTER REG_CQ_DELAY;
+        END IF;
         IF rst = '1' THEN
             phase_out_c <= PHASE_INIT_OUT_C;
             phase_out_d <= PHASE_INIT_OUT_D;
-        ELSIF rising_edge(click_b) THEN
-            phase_out_c <= NOT phase_out_c AFTER REG_CQ_DELAY;
-        ELSIF falling_edge(click_b) THEN
-            phase_out_d <= NOT phase_out_d AFTER REG_CQ_DELAY;
         END IF;
     END PROCESS;
 END impl;
