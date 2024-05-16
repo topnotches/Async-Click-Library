@@ -33,7 +33,7 @@ architecture Behavioral of merge is
   signal inA_token, inB_token, outC_bubble : std_logic;
   signal phase_a, phase_b, phase_c: std_logic;
   signal click : std_logic;
-  signal data_reg, data_sig: std_logic_vector(MERGE_DATA_WIDTH-1 downto 0);
+
   
   attribute dont_touch : string;
   attribute dont_touch of  phase_c, phase_a, phase_b, inA_token, inB_token : signal is "true";   
